@@ -16,7 +16,7 @@ const AboutPage = () => {
       <Breadcrumb
         pageName="About Page"
         description="We are here to help students for their better tomorrow"
-        titledes=''
+         titledes=""
       />
       <AboutSectionOne />
       <AboutSectionTwo />

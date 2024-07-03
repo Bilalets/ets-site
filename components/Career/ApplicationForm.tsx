@@ -126,7 +126,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
     ) as HTMLInputElement;
 
     if (!fileInput.files || fileInput.files.length === 0) {
-      alert("Please choose a file to upload.");
+      alert("Please choose a file to submit.");
       return;
     }
 
@@ -557,6 +557,17 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
             <div className="mt-4 flex flex-col gap-2 px-2 sm:flex-row sm:justify-start">
               <button
                 type="button"
+                className={`mb-2 rounded-lg bg-blue-700 px-8 py-4 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-red-300 sm:mb-0 ${
+                  theme === "dark"
+                    ? "border border-transparent"
+                    : "border border-gray-300"
+                }`}
+                onClick={handlePaynowClick}
+              >
+                Process Now
+              </button>
+              <button
+                type="button"
                 className={`mb-2 rounded-lg bg-red-500 px-8 py-4 text-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300 sm:mb-0 ${
                   theme === "dark"
                     ? "border border-transparent"
@@ -566,7 +577,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
               >
                 Close
               </button>
-              <div className="flex flex-grow items-center justify-center px-2">
+              {/* <div className="flex flex-grow items-center justify-center px-2">
                 <button
                   type="button"
                   className={`rounded-lg bg-green-500 px-20 py-4 text-center text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 ${
@@ -578,8 +589,8 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 >
                   Pay Now
                 </button>
-              </div>
-              <button
+              </div> */}
+              {/* <button
                 type="submit"
                 className={`rounded-lg bg-blue-700 px-8 py-4 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 ${
                   theme === "dark"
@@ -588,7 +599,17 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 }`}
               >
                 Submit
-              </button>
+              </button> */}
+              {/* <button
+                type="submit"
+                className={`rounded-lg bg-blue-700 px-8 py-4 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 ${
+                  theme === "dark"
+                    ? "border border-transparent"
+                    : "border border-gray-300"
+                }`}
+              >
+                Submit
+              </button> */}
             </div>
           </form>
         )}

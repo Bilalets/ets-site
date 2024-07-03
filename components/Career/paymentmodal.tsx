@@ -1,7 +1,8 @@
 // PaymentModal.tsx
 "use client";
 import Image from 'next/image';
-import React from 'react';
+import React, { useRef } from 'react';
+import { HiClipboardCopy } from 'react-icons/hi';
 
 interface PaymentModalProps {
   showModal: boolean;
@@ -11,52 +12,69 @@ interface PaymentModalProps {
 }
 
 const PaymentModal: React.FC<PaymentModalProps> = ({ showModal, theme, closeModal, handleUploadPaymentSlip }) => {
+  const paymentTextRef = useRef<HTMLInputElement>(null);
+
   if (!showModal) {
     return null;
   }
 
+  const handleCopyText = () => {
+    if (paymentTextRef.current) {
+      paymentTextRef.current.select();
+      document.execCommand('copy');
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-    <div className="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-lg w-full md:max-w-screen-md max-h-full md:max-h-screen overflow-y-auto">
-      <h2 className={`text-3xl font-bold mb-6 text-center ${theme === "dark" ? "text-white" : "text-blue-600"}`}>Payment Details</h2>
-      <div className="flex justify-center mb-4">
-        <p className="text-lg font-semibold">Scan QR code for payment</p>
-      </div>
-      <div className="flex justify-center mb-4">
-        <Image src="/images/QRcode/ets.jpg" alt="Payment Instructions"  width={340} height={340}/>
-        <Image src="/images/QRcode/ets2.jpg" alt="Another Image"   width={300} height={300}/>
-      </div>
-      <div className="flex justify-center mb-4">
-        <input 
-          type="file" 
-          id="payment-receipt" 
-          className={`bg-transparent border ${theme === "dark" ? "border-white text-white" : "border-gray-300 text-black"
-            } text-sm rounded-lg block w-full p-3 ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
-          style={{ color: theme === "dark" ? "white" : "black" }}
-        />
-      </div>
-      <div className="flex justify-center gap-4">
-        <button
-          type="button"
-          className={`text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-3 text-center ${
-            theme === "dark" ? "border border-transparent" : "border border-gray-300"
-          }`}
-          onClick={closeModal}
-        >
-          Close
-        </button>
-        <button
-          type="button"
-          className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center ${
-            theme === "dark" ? "border border-transparent" : "border border-gray-300"
-          }`}
-          onClick={handleUploadPaymentSlip}
-        >
-          Upload
-        </button>
+      <div className="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-lg w-full md:max-w-screen-md max-h-full md:max-h-screen overflow-y-auto">
+        <h2 className={`text-3xl font-bold mb-6 text-center ${theme === "dark" ? "text-white" : "text-blue-600"}`}>Payment Details</h2>
+        <div className="flex justify-center mb-4 relative">
+          <div className="relative border border-gray-300 rounded-lg">
+            <input 
+              ref={paymentTextRef}
+              type="text"
+              value="PK07FAYS3296787000001619"
+              readOnly
+              className={`bg-gray-100 dark:bg-gray-800 border-2 ${theme === "dark" ? "border-black text-white" : "border-black text-black"
+                } text-sm rounded-lg pl-3 pr-10 ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
+              style={{ color: theme === "dark" ? "white" : "black", height: '40px', width: '280px' }} // Increase height of input field
+            />
+            <HiClipboardCopy 
+              className={`absolute right-2 top-2 text-gray-400 dark:text-gray-300 cursor-pointer`}
+              onClick={handleCopyText}
+            />
+          </div>
+        </div>
+        <div className="flex justify-center mb-4">
+          <p className="text-lg font-semibold">Scan QR code for payment</p>
+        </div>
+        <div className="flex justify-center mb-4">
+          <Image src="/images/QRcode/ets.jpg" alt="Payment Instructions"  width={280} height={280}/>
+          <Image src="/images/QRcode/ets2.jpg" alt="Another Image"   width={290} height={290}/>
+        </div>
+        <div className="flex justify-center mb-4">
+          <input 
+            type="file" 
+            id="payment-receipt" 
+            className={`bg-transparent border ${theme === "dark" ? "border-white text-white" : "border-gray-300 text-black"
+              } text-sm rounded-lg block w-full p-3 ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
+            style={{ color: theme === "dark" ? "white" : "black" }}
+          />
+        </div>
+        <div className=" flex justify-end gap-4">
+          <button
+            type="button"
+            className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center ${
+              theme === "dark" ? "border border-transparent" : "border border-gray-300"
+            }`}
+            onClick={handleUploadPaymentSlip}
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 
