@@ -327,7 +327,7 @@ const BlogDetailsPage = () => {
                         Share this post :
                       </h5>
                       <div className="flex items-center sm:justify-end">
-                        
+                         x
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 // PaymentModal.tsx
-
+"use client";
 import Image from 'next/image';
 import React from 'react';
 
@@ -23,9 +23,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ showModal, theme, closeModa
         <p className="text-lg font-semibold">Scan QR code for payment</p>
       </div>
       <div className="flex justify-center mb-4">
-        <Image src="/images/QRcode/ets.jpg" alt="Payment Instructions" className="w-1/2 h-auto" />
-        
-        <Image src="/images/QRcode/ets2.jpg" alt="Another Image" className="w-1/2 h-auto ml-4" />
+        <Image src="/images/QRcode/ets.jpg" alt="Payment Instructions"  width={340} height={340}/>
+        <Image src="/images/QRcode/ets2.jpg" alt="Another Image"   width={300} height={300}/>
       </div>
       <div className="flex justify-center mb-4">
         <input 

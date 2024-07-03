@@ -21,7 +21,7 @@ const Hero = () => {
                 At ETS, we believe in the transformative power of education and the pivotal role that accurate and insightful assessments play in shaping the future of students. Our mission is to empower students to achieve excellence by providing comprehensive testing solutions that are designed to identify strengths, uncover potential, and guide personal and academic growth.
                 </p>
                 <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-                  <Link href={"https://sat-ets.vercel.app/"}>
+                  <Link href={"https://sat.ets.edu.pk/"}>
                   <button
                 
                 className="rounded-lg bg-primary px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-primary/80"
