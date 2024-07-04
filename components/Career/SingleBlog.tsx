@@ -69,7 +69,9 @@ const SingleBlog = ({ blog }: { blog: Blog }) => {
               Apply Now
             </button>
           </div>
-          <ApplicationForm isVisible={isFormVisible} onClose={toggleForm} />
+          {isFormVisible && (
+  <ApplicationForm isVisible={isFormVisible} onClose={toggleForm} />
+)}
         </div>
       </div>
     </>

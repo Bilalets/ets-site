@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import cities, { City } from "./cities"; // Ensure this path is correct
 import { useTheme } from "next-themes";
-import PaymentModal from "./paymentmodal";
+import Image from "next/image"; // Import Image component from Next.js
 
+import { CldUploadWidget } from 'next-cloudinary';
+import axios from "axios";
+import { toast } from "react-toastify";
 interface ApplicationFormProps {
   isVisible: boolean;
   onClose: () => void;
@@ -22,22 +25,55 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
   isVisible,
   onClose,
 }) => {
-  const [gender, setGender] = useState<string>("");
-  const [province, setProvince] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [cnic, setCnic] = useState<string>("");
-  const [mobile, setMobile] = useState<string>("");
+  const [gender, setGender] = useState<string>();
+  const [Name,setName]=useState<string>()
+  const [FatherName,SetFatherName]=useState<string>()
+  const [province, setProvince] = useState<string>();
+  const [city, setCity] = useState<string>();
+  const [cnic, setCnic] = useState<string>();
+  const [mobile, setMobile] = useState<string>();
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ cnic?: string; mobile?: string }>({});
+  const [picImage,setImage]=useState<string>()
   const { theme } = useTheme();
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [paymentUploaded, setPaymentUploaded] = useState<boolean>(false); // Track payment slip upload
+  const [email,setEmail]=useState<string>()
+  const [date,setDate]=useState<string>()
+  const [addqualification,setqualification]=useState<string>()
+  const [submissionStatus, setSubmissionStatus] = useState<string>("");
 
-  useEffect(() => {
-    if (!isVisible) {
-      resetForm();
+  const sendform = async () => {
+    try {
+      const formattedDate = new Date(date).toISOString();
+      await axios.post('/api/usersapplications', {
+        Name: Name,
+        FatherName: FatherName,
+        CNIC: cnic,
+        MobileNumber: mobile,
+        Email: email,
+        DateOfBirth: formattedDate,
+        Gender: gender,
+        Qualification: addqualification,
+        Province: province,
+        City: city,
+        Imageurl: picImage
+      });
+      
+      onClose();
+      alert('Application Successfully Submitted') // Close modal upon successful submission
+    } catch (error) {
+      // Handle error if needed
+      setSubmissionStatus("error");
     }
-  }, [isVisible]);
+  };
+  
+const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setDate(event.target.value);
+};
+
+const handlequalification =(e: React.ChangeEvent<HTMLSelectElement>)=>{
+    setqualification(e.target.value)
+}
 
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedProvince = e.target.value;
@@ -78,14 +114,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const resetForm = () => {
-    setGender("");
-    setProvince("");
-    setCity("");
-    setCnic("");
-    setMobile("");
-    setErrors({});
-  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,7 +121,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
       setIsSubmitted(true);
       setTimeout(() => {
         setIsSubmitted(false);
-        resetForm();
+       
         onClose();
       }, 2000);
     }
@@ -112,33 +140,21 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
     }
   };
 
-  const closeModal = () => {
-    setShowModal(false);
+
+  const handleUploadSuccess = (result) => {
+    const imageUrl = result.info.secure_url; // Get the secure URL of the uploaded image
+    setImage(imageUrl)
   };
+  
 
-  if (!isVisible) {
-    return null;
-  }
-
-  const handleUploadPaymentSlip = (): void => {
-    const fileInput = document.getElementById(
-      "payment-receipt",
-    ) as HTMLInputElement;
-
-    if (!fileInput.files || fileInput.files.length === 0) {
-      alert("Please choose a file to submit.");
-      return;
-    }
-
-    setTimeout(() => {
-      setPaymentUploaded(true);
-      closeModal();
-    }, 1000);
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value); // Update the 'name' state with the input value
   };
-
+  const handleFatherNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    SetFatherName(e.target.value); // Update the 'name' state with the input value
+  };
   const fatherNameLabel = `Father&apos;s Name`;
-  const fatherNamePlaceholder = `Enter your father&apos;s name`;
-
+  const fatherNamePlaceholder = `Enter your father&apos;s name`;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
       <div className="max-h-full w-full overflow-y-auto rounded-lg bg-white p-8 shadow-lg dark:bg-gray-700 md:max-h-screen md:max-w-screen-md">
@@ -149,13 +165,8 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
         >
           Application Form
         </h2>
+    
 
-        {isSubmitted ? (
-          <div className="text-center text-lg font-semibold text-green-600">
-            Application submitted successfully!
-          </div>
-        ) : (
-          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="-mx-4 flex flex-wrap">
               <div className="mb-4 w-full px-4 md:w-1/2">
                 <label
@@ -169,6 +180,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 <input
                   type="text"
                   id="name"
+                  onChange={handleNameChange}
                   className={`border bg-transparent ${
                     theme === "dark"
                       ? "border-white text-white"
@@ -192,6 +204,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                   Father&apos;s Name
                 </label>
                 <input
+                onChange={handleFatherNameChange}
                   type="text"
                   id="fatherName"
                   className={`border bg-transparent ${
@@ -203,7 +216,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                       ? "placeholder-white"
                       : "placeholder-gray-500"
                   }`}
-                  placeholder="Enter your father's name"
+                  placeholder={fatherNamePlaceholder}
                   required
                 />
               </div>
@@ -217,7 +230,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                   CNIC
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="cnic"
                   className={`border bg-transparent ${
                     theme === "dark"
@@ -247,7 +260,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                   Mobile Number
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="mobile"
                   className={`border bg-transparent ${
                     theme === "dark"
@@ -277,6 +290,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                   Email
                 </label>
                 <input
+                onChange={(e)=>setEmail(e.target.value)}
                   type="email"
                   id="email"
                   className={`border bg-transparent ${
@@ -303,6 +317,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 </label>
                 <input
                   type="date"
+                  onChange={handleDateChange}
                   id="dob"
                   className={`border bg-transparent ${
                     theme === "dark"
@@ -311,69 +326,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                   } block w-full appearance-none rounded-lg p-3 text-sm`}
                   required
                 />
-              </div>
-              <div className="relative mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="gender"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Gender
-                </label>
-                <select
-                  id="gender"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  style={{ color: theme === "dark" ? "white" : "black" }}
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  required
-                >
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value=""
-                  >
-                    Select your gender
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="male"
-                  >
-                    Male
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="female"
-                  >
-                    Female
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="other"
-                  >
-                    Other
-                  </option>
-                </select>
               </div>
 
               <div className="relative mb-4 w-full px-4 md:w-1/2">
@@ -386,6 +338,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                   Qualification
                 </label>
                 <select
+                onChange={handlequalification}
                   id="qualification"
                   className={`border bg-transparent ${
                     theme === "dark"
@@ -459,6 +412,36 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
               <div className="mb-4 w-full px-4 md:w-1/2">
                 <label
+                  htmlFor="gender"
+                  className={`mb-2 block text-sm font-medium ${
+                    theme === "dark" ? "text-white" : "text-black"
+                  }`}
+                >
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  className={`border bg-transparent ${
+                    theme === "dark"
+                      ? "border-white text-white"
+                      : "border-gray-300 text-black"
+                  } block w-full rounded-lg p-3 text-sm ${
+                    theme === "dark"
+                      ? "placeholder-white"
+                      : "placeholder-gray-500"
+                  }`}
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  required
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div className="mb-4 w-full px-4 md:w-1/2">
+                <label
                   htmlFor="province"
                   className={`mb-2 block text-sm font-medium ${
                     theme === "dark" ? "text-white" : "text-black"
@@ -477,29 +460,13 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                       ? "placeholder-white"
                       : "placeholder-gray-500"
                   }`}
-                  style={{ color: theme === "dark" ? "white" : "black" }}
                   value={province}
                   onChange={handleProvinceChange}
                   required
                 >
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value=""
-                  >
-                    Select your province
-                  </option>
-                  {provinces.map((province) => (
-                    <option
-                      key={province}
-                      value={province}
-                      style={{
-                        backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                        color: theme === "dark" ? "white" : "black",
-                      }}
-                    >
+                  <option value="">Select province</option>
+                  {provinces.map((province, index) => (
+                    <option key={index} value={province}>
                       {province}
                     </option>
                   ))}
@@ -525,47 +492,71 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                       ? "placeholder-white"
                       : "placeholder-gray-500"
                   }`}
-                  style={{ color: theme === "dark" ? "white" : "black" }}
                   value={city}
                   onChange={handleCityChange}
                   required
                 >
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value=""
-                  >
-                    Select your city
-                  </option>
-                  {filteredCities.map((city) => (
-                    <option
-                      key={city.name}
-                      value={city.name}
-                      style={{
-                        backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                        color: theme === "dark" ? "white" : "black",
-                      }}
-                    >
+                  <option value="">Select city</option>
+                  {filteredCities.map((city, index) => (
+                    <option key={index} value={city.name}>
                       {city.name}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
-            <div className="mt-4 flex flex-col gap-2 px-2 sm:flex-row sm:justify-start">
-              <button
-                type="button"
-                className={`mb-2 rounded-lg bg-blue-700 px-8 py-4 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-red-300 sm:mb-0 ${
-                  theme === "dark"
-                    ? "border border-transparent"
-                    : "border border-gray-300"
-                }`}
-                onClick={handlePaynowClick}
-              >
-                Process Now
-              </button>
+            <div className="flex flex-col items-center mb-4 relative">
+  <div><p className="text-center">Faisal Bank IBN</p></div>
+
+  <div className="relative border border-gray-300 rounded-lg">
+    <input 
+     
+      type="text"
+      value="PK07FAYS3296787000001619"
+      readOnly
+      className={`bg-gray-100 dark:bg-gray-800 border-2 ${theme === "dark" ? "border-black text-white" : "border-black text-black"
+        } text-sm rounded-lg pl-3 pr-10 ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
+      style={{ color: theme === "dark" ? "white" : "black", height: '40px', width: '280px' }} // Increase height of input field
+    />
+    
+  </div>
+</div>
+
+
+            <div className="flex justify-center mb-4">
+              <p className="text-lg font-semibold">
+                Scan QR code for payment
+              </p>
+            </div>
+            <div className="flex justify-center mb-4">
+              <Image
+                src="/images/QRcode/ets.jpg"
+                alt="Payment Instructions"
+                width={280}
+                height={280}
+              />
+              <Image
+                src="/images/QRcode/ets2.jpg"
+                alt="Another Image"
+                width={290}
+                height={290}
+              />
+            </div>
+            <CldUploadWidget uploadPreset="test_upload" onSuccess={handleUploadSuccess}>
+  {({ open }) => {
+    return (
+      <button   className={`text-white flex justify-center bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center ${
+        theme === "dark" ? "border border-transparent" : "border border-gray-300"
+      }`} onClick={() => open()}>
+        Upload an Image
+      </button>
+    );
+  }}
+</CldUploadWidget>
+{!picImage && (
+        <p className="mt-2 text-red-500">Please upload an image.</p>
+      )}
+<div className="mt-4 flex flex-col gap-2 px-2 sm:flex-row sm:justify-start">
               <button
                 type="button"
                 className={`mb-2 rounded-lg bg-red-500 px-8 py-4 text-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300 sm:mb-0 ${
@@ -577,20 +568,9 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
               >
                 Close
               </button>
-              {/* <div className="flex flex-grow items-center justify-center px-2">
-                <button
-                  type="button"
-                  className={`rounded-lg bg-green-500 px-20 py-4 text-center text-sm font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 ${
-                    theme === "dark"
-                      ? "border border-transparent"
-                      : "border border-gray-300"
-                  }`}
-                  onClick={handlePaynowClick}
-                >
-                  Pay Now
-                </button>
-              </div> */}
-              {/* <button
+              
+              <button
+              onClick={sendform}
                 type="submit"
                 className={`rounded-lg bg-blue-700 px-8 py-4 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 ${
                   theme === "dark"
@@ -599,26 +579,12 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 }`}
               >
                 Submit
-              </button> */}
-              {/* <button
-                type="submit"
-                className={`rounded-lg bg-blue-700 px-8 py-4 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 ${
-                  theme === "dark"
-                    ? "border border-transparent"
-                    : "border border-gray-300"
-                }`}
-              >
-                Submit
-              </button> */}
-            </div>
-          </form>
-        )}
-        <PaymentModal
-          showModal={showModal}
-          theme={theme}
-          closeModal={closeModal}
-          handleUploadPaymentSlip={handleUploadPaymentSlip}
-        />
+
+              </button>
+            </div>
+            
+         
+       
       </div>
     </div>
   );

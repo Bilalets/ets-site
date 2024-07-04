@@ -25,6 +25,7 @@ model UserApplication {
   Qualification String
   Province      String
   City          String
+  Imageurl      String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

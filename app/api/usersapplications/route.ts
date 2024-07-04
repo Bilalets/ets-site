@@ -13,11 +13,13 @@ interface User {
   Qualification: string;
   Province: string;
   City: string;
+  Imageurl:string
 }
 
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as User;
+    
     const {
       id,
       Name,
@@ -30,7 +32,9 @@ export async function POST(req: Request) {
       Qualification,
       Province,
       City,
+      Imageurl
     } = body;
+    
     const createdData: User = {
       id,
       Name,
@@ -43,6 +47,7 @@ export async function POST(req: Request) {
       Qualification,
       Province,
       City,
+      Imageurl
     };
     const createdApplication = await prisma.userApplication.create({
       data: createdData,
