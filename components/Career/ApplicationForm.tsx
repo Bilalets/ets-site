@@ -5,7 +5,7 @@ import Image from "next/image"; // Import Image component from Next.js
 
 import { CldUploadWidget } from 'next-cloudinary';
 import axios from "axios";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 interface ApplicationFormProps {
   isVisible: boolean;
   onClose: () => void;
@@ -40,7 +40,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const [email,setEmail]=useState<string>()
   const [date,setDate]=useState<string>()
   const [addqualification,setqualification]=useState<string>()
-  const [submissionStatus, setSubmissionStatus] = useState<string>("");
+ 
 
   const sendform = async () => {
     try {
@@ -60,10 +60,10 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
       });
       
       onClose();
-      alert('Application Successfully Submitted') // Close modal upon successful submission
+      toast.success('Application Successfully Submitted') // Close modal upon successful submission
     } catch (error) {
       // Handle error if needed
-      setSubmissionStatus("error");
+    toast.error('Error Submiting Application')
     }
   };
   

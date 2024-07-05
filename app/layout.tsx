@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={`bg-[#FCFCFC] dark:bg-black ${inter.className}`}>
         <Providers>
           <Header />
-        <ToastContainer/>
+      <Toaster/>
           {children}
           <Footer />
         
@@ -36,5 +36,6 @@ export default function RootLayout({
   );
 }
 
-import { Providers } from "./providers";import { ToastContainer } from "react-toastify";
+import { Providers } from "./providers";
+import { Toaster } from "react-hot-toast";
 
