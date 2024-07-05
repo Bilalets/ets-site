@@ -548,7 +548,7 @@ const handlequalification =(e: React.ChangeEvent<HTMLSelectElement>)=>{
       <button   className={`text-white flex justify-center bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center ${
         theme === "dark" ? "border border-transparent" : "border border-gray-300"
       }`} onClick={() => open()}>
-        Upload an Image
+        Upload Payment Receipt
       </button>
     );
   }}
