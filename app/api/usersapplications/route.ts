@@ -13,13 +13,16 @@ interface User {
   Qualification: string;
   Province: string;
   City: string;
-  Imageurl:string
+  Imageurl: string;
+  isVerified: boolean;
+  isViewed: boolean;
+  registrationNumber: number; // Ensure this field is present in the interface
 }
 
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as User;
-    
+
     const {
       id,
       Name,
@@ -32,10 +35,24 @@ export async function POST(req: Request) {
       Qualification,
       Province,
       City,
-      Imageurl
+      Imageurl,
+      isVerified,
+      isViewed,
     } = body;
-    
-    const createdData: User = {
+
+    // Calculate the next registration number
+    const lastUser = await prisma.userApplication.findFirst({
+      orderBy: {
+        registrationNumber: 'desc',
+      },
+      select: {
+        registrationNumber: true,
+      },
+    });
+
+    const nextRegistrationNumber = lastUser ? lastUser.registrationNumber + 1 : 1;
+
+    const createdData = {
       id,
       Name,
       FatherName,
@@ -47,8 +64,12 @@ export async function POST(req: Request) {
       Qualification,
       Province,
       City,
-      Imageurl
+      Imageurl,
+      isVerified: false,
+      isViewed: false,
+      registrationNumber: nextRegistrationNumber,
     };
+
     const createdApplication = await prisma.userApplication.create({
       data: createdData,
     });

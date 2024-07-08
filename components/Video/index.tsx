@@ -2,8 +2,6 @@
 import SectionTitle from "../Common/SectionTitle";
 
 const Video = () => {
- 
-
   return (
     <section className="relative z-10 py-16 md:py-20 lg:py-28">
       <div className="container">
@@ -21,9 +19,9 @@ const Video = () => {
               data-wow-delay=".15s"
             >
               <div className="relative aspect-[77/40] items-center justify-center">
-                <video width="800" height="800" autoPlay controls src="public/images/vedio.mp4">
-                  <source src='public/images/vedio.mp4'  />
-             
+                <video width="800" height="800" controls>
+                  <source src="/images/vedio.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
                 </video>
               </div>
             </div>
