@@ -103,7 +103,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
     if (!name) newErrors.name = "Please fill in the Name";
     if (!fatherName) newErrors.fatherName = "Please fill in the Father's Name";
     if (!cnic || cnic.length !== 13) newErrors.cnic = "CNIC must be 13 digits long";
-    if (!mobile || mobile.length < 10 || mobile.length > 11) newErrors.mobile = "Mobile number must be 10 to 11 digits long";
+    if (!mobile || mobile.length < 10 || mobile.length > 11) newErrors.mobile = "Mobile number must be 11 digits long";
     if (!email) newErrors.email = "Please fill in the Email";
     if (!date) newErrors.date = "Please fill in the Date of Birth";
     if (!qualification) newErrors.qualification = "Please select a Qualification";
@@ -458,12 +458,12 @@ const filteredCities: City[] = province
               ))}
             </select>
           </div>
-<p className="text-red-600">NOTE: Kindly, scan the QR code OR copy the IBAN number to pay the registration fee, please. After succesful transaction, upload the receipt.</p>
+<p className="text-red-600">NOTE: Kindly, scan the QR code OR copy the IBAN number to pay the registration fee, please. After successfull transaction, upload the receipt.</p>
 
           <div className="flex justify-center mt-8 items-center ml-8 lg:ml-48 mb-4">
             
   <div className="flex flex-col items-center">
-    <p className="text-center">Faisal Bank IBN</p>
+    <p className="text-center">Faisal Bank IBAN</p>
     <div className="relative mt-2 rounded-lg border border-gray-300">
       <input
         type="text"
