@@ -26,7 +26,7 @@ const Hero = () => {
                 
                 className="rounded-lg bg-primary px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-primary/80"
               >
-                🔥 Take a Test
+               Enroll YourSelf 🔥 
               </button>
                   </Link>
               

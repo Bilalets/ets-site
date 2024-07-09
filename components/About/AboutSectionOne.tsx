@@ -1,5 +1,13 @@
+"use client";
+import { useEffect } from "react";
 import Image from "next/image";
 import SectionTitle from "../Common/SectionTitle";
+import AOS from "aos"; // Import AOS
+import "aos/dist/aos.css";
+
+interface ListProps {
+  text: string;
+}
 
 const checkIcon = (
   <svg width="16" height="13" viewBox="0 0 16 13" className="fill-current">
@@ -7,66 +15,103 @@ const checkIcon = (
   </svg>
 );
 
-const AboutSectionOne = () => {
-  const List = ({ text }) => (
-    <p className="mb-5 flex items-center text-lg font-medium text-body-color">
-      <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
-        {checkIcon}
-      </span>
-      {text}
-    </p>
-  );
+const List: React.FC<ListProps> = ({ text }) => (
+  <p
+    className="mb-5 flex items-center text-lg font-medium text-body-color"
+    data-aos="fade-right"
+  >
+    <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
+      {checkIcon}
+    </span>
+    {text}
+  </p>
+);
+
+const AboutSectionOne: React.FC = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1200,
+    });
+  }, []);
 
   return (
-    <section id="about" className="pt-16 md:pt-20 lg:pt-28">
-      <div className="container">
-        <div className="border-b border-body-color/[.15] pb-16 dark:border-white/[.15] md:pb-20 lg:pb-28">
-          <div className="-mx-4 flex flex-wrap items-center">
-            <div className="w-full px-4 lg:w-1/2">
-              <SectionTitle
-                title="The Best Learning Experience."
-                paragraph="Through our web-based portal offers students a seamless and engaging educational journey. Our interactive platform combines fun activities, personalized learning paths, and expert-led lessons to stimulate and social development. Students can track their progress in real-time and access a wealth of resources. Experience a modern approach to early education from the comfort of home."
-                mb="44px"
+    <section id="about" className="bg-white py-16 dark:bg-gray-900">
+      <div className="container mx-auto px-6 lg:px-8">
+        <div className="mb-12 flex flex-col lg:flex-row lg:items-center lg:space-x-6">
+          <div className="lg:w-1/2">
+            <SectionTitle
+              title="Revolutionizing Education and Career Assessments"
+              paragraph="Comprehensive Online Assessments for Educational Institutions and Career Development Eagle Testing Service (ETS) is a leading provider of online assessments tailored for schools, colleges, and universities, adhering to the standards of various education boards such as the Federal Board, KPK Board, and Punjab Board of Pakistan. ETS excels in delivering precise and effective evaluation tools that ensure students' academic performance is accurately measured."
+              data-aos="fade-up"
+            />
+          </div>
+          <div className="w-full px-4 lg:w-2/4">
+            {" "}
+            <div
+              className="wow fadeInUp relative mx-auto aspect-[25/18] max-w-[700px] lg:mr-0"
+              data-wow-delay=".2s"
+              style={{ paddingBottom: "56.25%" }} // Adjusted paddingBottom to maintain the aspect ratio
+            >
+              <Image
+               src="/images/about/men.png"
+                alt="about-image"
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                className="mx-auto max-w-full transform rounded-lg drop-shadow-2xl transition-transform hover:scale-105 dark:hidden dark:drop-shadow-none lg:mr-0"
               />
-
-              <div
-                className="wow fadeInUp mb-12 max-w-[570px] lg:mb-0"
-                data-wow-delay=".15s"
-              >
-                <div className="mx-[-12px] flex flex-wrap">
-                  <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="Easy UI" />
-                    <List text="Passionate teachers" />
-                    <List text="Performance Dashboard" />
-                  </div>
-
-                  <div className="w-full px-3 sm:w-1/2 lg:w-full xl:w-1/2">
-                    <List text="50k Questions" />
-                    <List text="Rich documentation" />
-                    <List text="Developer friendly" />
-                  </div>
-                </div>
-              </div>
+              <Image
+                src="/images/about/men.png"
+                alt="about-image"
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                className="mx-auto hidden max-w-full transform rounded-lg drop-shadow-2xl transition-transform hover:scale-105 dark:block dark:drop-shadow-none lg:mr-0"
+              />
             </div>
+          </div>
+        </div>
 
-            <div className="w-full px-4 lg:w-1/2">
-              <div
-                className="wow fadeInUp relative mx-auto aspect-[25/24] max-w-[500px] lg:mr-0"
-                data-wow-delay=".2s"
-              >
-                <Image
-                  src="/images/about/about-image.svg"
-                  alt="about-image"
-                  fill
-                  className="drop-shadow-three mx-auto max-w-full dark:hidden dark:drop-shadow-none lg:mr-0"
-                />
-                <Image
-                  src="/images/about/about-image-dark.svg"
-                  alt="about-image"
-                  fill
-                  className="drop-shadow-three mx-auto hidden max-w-full dark:block dark:drop-shadow-none lg:mr-0"
-                />
-              </div>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <div className="space-y-6">
+            <h2
+              className="text-4xl font-extrabold text-gray-800 dark:text-white"
+              data-aos="fade-up"
+            >
+              The Best Learning Experience
+            </h2>
+            <p
+              className="text-justify text-lg leading-relaxed text-gray-700 dark:text-gray-300"
+              data-aos="fade-up"
+              data-aos-delay="70"
+            >
+              Established in 2021, Eagle Testing Service (ETS) streamlines
+              testing and training for public and private organizations.
+              Offering cutting-edge solutions in assessments, training, and data
+              management, ETS aims to improve reliability, manpower, and
+              educational outcomes. They specialize in pre-employment testing,
+              providing comprehensive solutions nationwide through a secure
+              network of test centers. Emphasizing security and timely results,
+              ETS has become a leader in private sector testing.
+            </p>
+            <List text="Screening, assessments, and training programs." />
+            <List text="Enterprise software solutions." />
+            <List text="Pre-employment and recruitment tests." />
+            <List text="Consulting services and technical assistance." />
+          </div>
+          <div
+            className="transform overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
+            data-aos="fade-left"
+          >
+            <div className="relative h-0" style={{ paddingBottom: "76%" }}>
+              <Image
+               src="/images/about/web.png" // Replace with your image path
+                alt="Educational Image"
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                className="rounded-lg"
+              />
             </div>
           </div>
         </div>

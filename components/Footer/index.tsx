@@ -101,18 +101,18 @@ const Footer = () => {
                 <ul>
                   <li>
                     <a
-                      href="/blogs"
+                      href="/"
                       className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
                     >
-                      Blog
+                      Home
                     </a>
                   </li>
                   <li>
                     <a
-                      href="/pricing"
+                      href="/career"
                       className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
                     >
-                      Pricing
+                   Career
                     </a>
                   </li>
                   <li>
@@ -121,6 +121,14 @@ const Footer = () => {
                       className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
                     >
                       About
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/contact"
+                      className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
+                    >
+                   Contact Us
                     </a>
                   </li>
                 </ul>
@@ -133,14 +141,7 @@ const Footer = () => {
                   Terms
                 </h2>
                 <ul>
-                  <li>
-                    <a
-                      href="/"
-                      className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
-                    >
-                      TOS
-                    </a>
-                  </li>
+               
                   <li>
                     <a
                       href="/"
@@ -149,14 +150,7 @@ const Footer = () => {
                       Privacy Policy
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="/"
-                      className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
-                    >
-                      Refund Policy
-                    </a>
-                  </li>
+              
                 </ul>
               </div>
             </div>
@@ -169,26 +163,26 @@ const Footer = () => {
                 <ul>
                   <li>
                     <a
-                      href="/contact"
+                    
                       className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
                     >
-                      Open Support Ticket
+                    info@ets.edu.pk
                     </a>
                   </li>
                   <li>
                     <a
-                      href="/"
+                     
                       className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
                     >
-                      Terms of Use
+                      051-2375081
                     </a>
                   </li>
                   <li>
                     <a
-                      href="/about"
+                     
                       className="dark:text-body-color-dark mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:hover:text-primary"
                     >
-                      About
+                    9AM-5PM
                     </a>
                   </li>
                 </ul>

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@emailjs/browser':
+        specifier: ^4.3.3
+        version: 4.3.3
       '@prisma/client':
         specifier: ^5.16.1
         version: 5.16.1(prisma@5.16.1)
@@ -54,6 +57,9 @@ importers:
         specifier: ^10.0.5
         version: 10.0.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
+      '@types/aos':
+        specifier: ^3.0.7
+        version: 3.0.7
       '@types/node':
         specifier: ^20.14.9
         version: 20.14.9
@@ -215,6 +221,10 @@ packages:
 
   '@cloudinary/url-gen@1.15.0':
     resolution: {integrity: sha512-bjU67eZxLUgoRy/Plli4TQio7q6P31OYqnEgXxeN9TKXrzr6h0DeEdIUhKI9gy3HkEBWXWWJIPh7j7gkOJPnyA==}
+
+  '@emailjs/browser@4.3.3':
+    resolution: {integrity: sha512-ltpt2S/WVREIBXptxYAVYBvXb2O6yTUYiRUWF8OLikMxlmiGsIgKpgHppikNd4Df0uAav7jCsQKcOJ3TJFUx5g==}
+    engines: {node: '>=14.0.0'}
 
   '@eslint/eslintrc@1.4.1':
     resolution: {integrity: sha512-XXrH9Uarn0stsyldqDYq8r++mROmWRI1xKMXa640Bb//SY1+ECYX6VzT6Lcx5frD0V30XieqJ0oX9I2Xj5aoMA==}
@@ -439,6 +449,9 @@ packages:
 
   '@tsconfig/recommended@1.0.7':
     resolution: {integrity: sha512-xiNMgCuoy4mCL4JTywk9XFs5xpRUcKxtWEcMR6FNMtsgewYTIgIR+nvlP4A4iRCAzRsHMnPhvTRrzp4AGcRTEA==}
+
+  '@types/aos@3.0.7':
+    resolution: {integrity: sha512-sEhyFqvKauUJZDbvAB3Pggynrq6g+2PS4XB3tmUr+mDL1gfDJnwslUC4QQ7/l8UD+LWpr3RxZVR/rHoZrLqZVg==}
 
   '@types/cacheable-request@6.0.3':
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
@@ -4323,6 +4336,8 @@ snapshots:
     dependencies:
       '@cloudinary/transformation-builder-sdk': 1.13.3
 
+  '@emailjs/browser@4.3.3': {}
+
   '@eslint/eslintrc@1.4.1':
     dependencies:
       ajv: 6.12.6
@@ -4522,6 +4537,8 @@ snapshots:
       defer-to-connect: 2.0.1
 
   '@tsconfig/recommended@1.0.7': {}
+
+  '@types/aos@3.0.7': {}
 
   '@types/cacheable-request@6.0.3':
     dependencies:

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import cities, { City } from "./cities"; // Ensure this path is correct
 import { useTheme } from "next-themes";
 import Image from "next/image"; // Import Image component from Next.js
-
 import { CldUploadWidget } from 'next-cloudinary';
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -25,60 +24,56 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
   isVisible,
   onClose,
 }) => {
-  const [gender, setGender] = useState<string>();
-  const [Name,setName]=useState<string>()
-  const [FatherName,SetFatherName]=useState<string>()
-  const [province, setProvince] = useState<string>();
-  const [city, setCity] = useState<string>();
-  const [cnic, setCnic] = useState<string>();
-  const [mobile, setMobile] = useState<string>();
+  const [gender, setGender] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [fatherName, setFatherName] = useState<string>("");
+  const [province, setProvince] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [cnic, setCnic] = useState<string>("");
+  const [mobile, setMobile] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [errors, setErrors] = useState<{ cnic?: string; mobile?: string }>({});
-  const [picImage,setImage]=useState<string>()
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [picImage, setImage] = useState<string>("");
   const { theme } = useTheme();
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [email,setEmail]=useState<string>()
-  const [date,setDate]=useState<string>()
-  const [addqualification,setqualification]=useState<string>()
- 
+  const [email, setEmail] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [qualification, setQualification] = useState<string>("");
 
-  const sendform = async () => {
+
+  const sendForm = async () => {
+    if (!validateForm()) return;
+
     try {
       const formattedDate = new Date(date).toISOString();
       await axios.post('/api/usersapplications', {
-        Name: Name,
-        FatherName: FatherName,
+        Name: name,
+        FatherName: fatherName,
         CNIC: cnic,
         MobileNumber: mobile,
         Email: email,
         DateOfBirth: formattedDate,
         Gender: gender,
-        Qualification: addqualification,
+        Qualification: qualification,
         Province: province,
         City: city,
         Imageurl: picImage
       });
-      
+
       onClose();
-      toast.success('Application Successfully Submitted') // Close modal upon successful submission
+      toast.success('Application Successfully Submitted');
     } catch (error) {
-      // Handle error if needed
-    toast.error('Error Submiting Application')
+      toast.error('Error Submitting Application');
     }
   };
-  
-const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setDate(event.target.value);
-};
 
-const handlequalification =(e: React.ChangeEvent<HTMLSelectElement>)=>{
-    setqualification(e.target.value)
-}
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(event.target.value);
+  };
 
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedProvince = e.target.value;
     setProvince(selectedProvince);
-    // Reset city when province changes
     setCity("");
   };
 
@@ -103,58 +98,31 @@ const handlequalification =(e: React.ChangeEvent<HTMLSelectElement>)=>{
   };
 
   const validateForm = () => {
-    const newErrors: { cnic?: string; mobile?: string } = {};
-    if (cnic.length !== 13) {
-      newErrors.cnic = "CNIC must be 13 digits long";
-    }
-    if (mobile.length < 10 || mobile.length > 11) {
-      newErrors.mobile = "Mobile number must be 10 to 11 digits long";
-    }
+    const newErrors: { [key: string]: string } = {};
+
+    if (!name) newErrors.name = "Please fill in the Name";
+    if (!fatherName) newErrors.fatherName = "Please fill in the Father's Name";
+    if (!cnic || cnic.length !== 13) newErrors.cnic = "CNIC must be 13 digits long";
+    if (!mobile || mobile.length < 10 || mobile.length > 11) newErrors.mobile = "Mobile number must be 10 to 11 digits long";
+    if (!email) newErrors.email = "Please fill in the Email";
+    if (!date) newErrors.date = "Please fill in the Date of Birth";
+    if (!qualification) newErrors.qualification = "Please select a Qualification";
+    if (!gender) newErrors.gender = "Please select a Gender";
+    if (!province) newErrors.province = "Please select a Province";
+    if (!city) newErrors.city = "Please select a City";
+    if (!picImage) newErrors.picImage = "Please upload an image";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validateForm()) {
-      setIsSubmitted(true);
-      setTimeout(() => {
-        setIsSubmitted(false);
-       
-        onClose();
-      }, 2000);
-    }
-  };
-
-  // Filter cities based on selected province
-  const filteredCities: City[] = province
-    ? cities.filter((c) => c.province === province)
-    : [];
-
-  const handlePaynowClick = () => {
-    if (gender && province && city && cnic && mobile) {
-      setShowModal(true);
-    } else {
-      alert("Please fill out all fields before proceeding to payment.");
-    }
-  };
-
-
   const handleUploadSuccess = (result) => {
     const imageUrl = result.info.secure_url; // Get the secure URL of the uploaded image
-    setImage(imageUrl)
+    setImage(imageUrl);
   };
-  
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value); // Update the 'name' state with the input value
-  };
-  const handleFatherNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    SetFatherName(e.target.value); // Update the 'name' state with the input value
-  };
-  const fatherNameLabel = `Father&apos;s Name`;
-  const fatherNamePlaceholder = `Enter your father&apos;s name`;
+const filteredCities: City[] = province
+    ? cities.filter((c) => c.province === province)
+    : [];
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
       <div className="max-h-full w-full overflow-y-auto rounded-lg bg-white p-8 shadow-lg dark:bg-gray-700 md:max-h-screen md:max-w-screen-md">
@@ -165,383 +133,386 @@ const handlequalification =(e: React.ChangeEvent<HTMLSelectElement>)=>{
         >
           Application Form
         </h2>
-    
 
-            <div className="-mx-4 flex flex-wrap">
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="name"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
+        <div className="-mx-4 flex flex-wrap">
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="name"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              placeholder="Enter your name"
+              required
+            />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="fatherName"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Father&apos;s Name
+            </label>
+            <input
+              type="text"
+              id="fatherName"
+              value={fatherName}
+              onChange={(e) => setFatherName(e.target.value)}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              placeholder="Enter your father's name"
+              required
+            />
+            {errors.fatherName && (
+              <p className="text-sm text-red-500">{errors.fatherName}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="cnic"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              CNIC
+            </label>
+            <input
+              type="number"
+              id="cnic"
+              value={cnic}
+              onChange={handleCnicChange}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              placeholder="Enter your CNIC number"
+              required
+            />
+            {errors.cnic && (
+              <p className="text-sm text-red-500">{errors.cnic}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="mobile"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Mobile Number
+            </label>
+            <input
+              type="number"
+              id="mobile"
+              value={mobile}
+              onChange={handleMobileChange}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              placeholder="Enter your mobile number"
+              required
+            />
+            {errors.mobile && (
+              <p className="text-sm text-red-500">{errors.mobile}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="email"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              placeholder="Enter your email address"
+              required
+            />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="date"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Date of Birth
+            </label>
+            <input
+              type="date"
+              id="date"
+              value={date}
+              onChange={handleDateChange}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              required
+            />
+            {errors.date && (
+              <p className="text-sm text-red-500">{errors.date}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="gender"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Gender
+            </label>
+            <select
+              id="gender"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              required
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            {errors.gender && (
+              <p className="text-sm text-red-500">{errors.gender}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="qualification"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Qualification
+            </label>
+            <input
+              type="text"
+              id="qualification"
+              value={qualification}
+              onChange={(e) => setQualification(e.target.value)}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              placeholder="Enter your qualification"
+              required
+            />
+            {errors.qualification && (
+              <p className="text-sm text-red-500">{errors.qualification}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="province"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Province
+            </label>
+            <select
+              id="province"
+              value={province}
+              onChange={handleProvinceChange}
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark"
+                  ? "placeholder-white"
+                  : "placeholder-gray-500"
+              }`}
+              required
+            >
+              <option value="">Select Province</option>
+              {provinces.map((province, index) => (
+                <option key={index} value={province}>
+                  {province}
+                </option>
+              ))}
+            </select>
+            {errors.province && (
+              <p className="text-sm text-red-500">{errors.province}</p>
+            )}
+          </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="city"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              City
+            </label>
+            <select
+              id="city"
+              className={`border bg-transparent ${
+                theme === "dark"
+                  ? "border-white text-white"
+                  : "border-gray-300 text-black"
+              } block w-full rounded-lg p-3 text-sm ${
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
+              }`}
+              style={{ color: theme === "dark" ? "white" : "black" }}
+              value={city}
+              onChange={handleCityChange}
+              required
+            >
+              <option
+                style={{
+                  backgroundColor: theme === "dark" ? "#4B5563" : "white",
+                  color: theme === "dark" ? "white" : "black",
+                }}
+                value=""
+              >
+                Select your city
+              </option>
+              {filteredCities.map((city, index) => (
+                <option
+                  key={index}
+                  style={{
+                    backgroundColor: theme === "dark" ? "#4B5563" : "white",
+                    color: theme === "dark" ? "white" : "black",
+                  }}
+                  value={city.name}
                 >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  onChange={handleNameChange}
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  placeholder="Enter your name"
-                  required
-                />
-              </div>
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="fatherName"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Father&apos;s Name
-                </label>
-                <input
-                onChange={handleFatherNameChange}
-                  type="text"
-                  id="fatherName"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  placeholder={fatherNamePlaceholder}
-                  required
-                />
-              </div>
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="cnic"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  CNIC
-                </label>
-                <input
-                  type="number"
-                  id="cnic"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  placeholder="Enter your CNIC number"
-                  value={cnic}
-                  onChange={handleCnicChange}
-                  required
-                />
-                {errors.cnic && (
-                  <p className="text-sm text-red-500">{errors.cnic}</p>
-                )}
-              </div>
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="mobile"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Mobile Number
-                </label>
-                <input
-                  type="number"
-                  id="mobile"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  placeholder="Enter your mobile number"
-                  value={mobile}
-                  onChange={handleMobileChange}
-                  required
-                />
-                {errors.mobile && (
-                  <p className="text-sm text-red-500">{errors.mobile}</p>
-                )}
-              </div>
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="email"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Email
-                </label>
-                <input
-                onChange={(e)=>setEmail(e.target.value)}
-                  type="email"
-                  id="email"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  placeholder="Enter your email address"
-                  required
-                />
-              </div>
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="dob"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Date of Birth
-                </label>
-                <input
-                  type="date"
-                  onChange={handleDateChange}
-                  id="dob"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full appearance-none rounded-lg p-3 text-sm`}
-                  required
-                />
-              </div>
+                  {city.name}
+                </option>
+              ))}
+            </select>
+          </div>
+<p className="text-red-600">NOTE: Kindly, scan the QR code OR copy the IBAN number to pay the registration fee, please. After succesful transaction, upload the receipt.</p>
 
-              <div className="relative mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="qualification"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Qualification
-                </label>
-                <select
-                onChange={handlequalification}
-                  id="qualification"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  style={{ color: theme === "dark" ? "white" : "black" }}
-                  required
-                >
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value=""
-                  >
-                    Select your qualification
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="matric"
-                  >
-                    Matriculation
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="intermediate"
-                  >
-                    Intermediate
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="bachelors"
-                  >
-                    Bachelor&apos;s
-                  </option>
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="masters"
-                  >
-                    Master&apos;s
-                  </option>
-
-                  <option
-                    style={{
-                      backgroundColor: theme === "dark" ? "#4B5563" : "white",
-                      color: theme === "dark" ? "white" : "black",
-                    }}
-                    value="phd"
-                  >
-                    PhD
-                  </option>
-                </select>
-              </div>
-
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="gender"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Gender
-                </label>
-                <select
-                  id="gender"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  required
-                >
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="province"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Province
-                </label>
-                <select
-                  id="province"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  value={province}
-                  onChange={handleProvinceChange}
-                  required
-                >
-                  <option value="">Select province</option>
-                  {provinces.map((province, index) => (
-                    <option key={index} value={province}>
-                      {province}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4 w-full px-4 md:w-1/2">
-                <label
-                  htmlFor="city"
-                  className={`mb-2 block text-sm font-medium ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  City
-                </label>
-                <select
-                  id="city"
-                  className={`border bg-transparent ${
-                    theme === "dark"
-                      ? "border-white text-white"
-                      : "border-gray-300 text-black"
-                  } block w-full rounded-lg p-3 text-sm ${
-                    theme === "dark"
-                      ? "placeholder-white"
-                      : "placeholder-gray-500"
-                  }`}
-                  value={city}
-                  onChange={handleCityChange}
-                  required
-                >
-                  <option value="">Select city</option>
-                  {filteredCities.map((city, index) => (
-                    <option key={index} value={city.name}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="flex flex-col items-center mb-4 relative">
-  <div><p className="text-center">Faisal Bank IBN</p></div>
-
-  <div className="relative border border-gray-300 rounded-lg">
-    <input 
-     
-      type="text"
-      value="PK07FAYS3296787000001619"
-      readOnly
-      className={`bg-gray-100 dark:bg-gray-800 border-2 ${theme === "dark" ? "border-black text-white" : "border-black text-black"
-        } text-sm rounded-lg pl-3 pr-10 ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
-      style={{ color: theme === "dark" ? "white" : "black", height: '40px', width: '280px' }} // Increase height of input field
-    />
-    
+          <div className="flex justify-center mt-8 items-center ml-8 lg:ml-48 mb-4">
+            
+  <div className="flex flex-col items-center">
+    <p className="text-center">Faisal Bank IBN</p>
+    <div className="relative mt-2 rounded-lg border border-gray-300">
+      <input
+        type="text"
+        value="PK07FAYS3296787000001619"
+        readOnly
+        className={`border-1 bg-gray-100 dark:bg-gray-800 ${
+          theme === "dark" ? "border-black text-white" : "border-black text-black"
+        } rounded-lg pl-3 text-sm ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
+        style={{
+          color: theme === "dark" ? "white" : "black",
+          height: "40px",
+          width: "280px",
+        }}
+      />
+    </div>
   </div>
 </div>
 
-
-            <div className="flex justify-center mb-4">
-              <p className="text-lg font-semibold">
-                Scan QR code for payment
-              </p>
-            </div>
-            <div className="flex justify-center mb-4">
-              <Image
-                src="/images/QRcode/ets.jpg"
-                alt="Payment Instructions"
-                width={280}
-                height={280}
-              />
-              <Image
-                src="/images/QRcode/ets2.jpg"
-                alt="Another Image"
-                width={290}
-                height={290}
-              />
-            </div>
+          <div className="mb-4 flex flex-row items-center justify-center md:flex-row">
+          <div className="w-full p-2 md:w-1/2">
+            <Image
+              src="/images/QRcode/ets.jpg"
+              alt="Payment Instructions"
+              layout="responsive"
+              width={300}
+              height={300}
+              className="h-auto w-full"
+            />
+          </div>
+          <div className="w-full p-2 md:w-1/2">
+            <Image
+              src="/images/QRcode/ets2.jpg"
+              alt="Another Image"
+              layout="responsive"
+              width={280}
+              height={280}
+              className="h-auto w-full"
+            />
+          </div>
+        </div>
+          <div className="mb-4 w-full px-4 md:w-1/2">
+            <label
+              htmlFor="picImage"
+              className={`mb-2 block text-sm font-medium ${
+                theme === "dark" ? "text-white" : "text-black"
+              }`}
+            >
+              Upload Image
+            </label>
             <CldUploadWidget uploadPreset="test_upload" onSuccess={handleUploadSuccess}>
   {({ open }) => {
     return (
@@ -553,38 +524,26 @@ const handlequalification =(e: React.ChangeEvent<HTMLSelectElement>)=>{
     );
   }}
 </CldUploadWidget>
-{!picImage && (
-        <p className="mt-2 text-red-500">Please upload an image.</p>
-      )}
-<div className="mt-4 flex flex-col gap-2 px-2 sm:flex-row sm:justify-start">
-              <button
-                type="button"
-                className={`mb-2 rounded-lg bg-red-500 px-8 py-4 text-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300 sm:mb-0 ${
-                  theme === "dark"
-                    ? "border border-transparent"
-                    : "border border-gray-300"
-                }`}
-                onClick={onClose}
-              >
-                Close
-              </button>
-              
-              <button
-              onClick={sendform}
-                type="submit"
-                className={`rounded-lg bg-blue-700 px-8 py-4 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 ${
-                  theme === "dark"
-                    ? "border border-transparent"
-                    : "border border-gray-300"
-                }`}
-              >
-                Submit
-
-              </button>
-            </div>
-            
-         
-       
+            {errors.picImage && (
+              <p className="text-sm text-red-500">{errors.picImage}</p>
+            )}
+          </div>
+        </div>
+        <div className="mt-6 text-center">
+          <button
+            type="submit"
+            onClick={sendForm}
+            className="w-full rounded-lg bg-blue-500 py-2 px-4 font-semibold text-white hover:bg-blue-700"
+          >
+            Submit
+          </button>
+          <button
+            onClick={onClose}
+            className="mt-2 w-full rounded-lg bg-gray-500 py-2 px-4 font-semibold text-white hover:bg-gray-700"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

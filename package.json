@@ -10,7 +10,9 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@prisma/client": "^5.16.1",
+    "aos": "^2.3.4",
     "axios": "^1.7.2",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
@@ -27,6 +29,7 @@
     "react-toastify": "^10.0.5"
   },
   "devDependencies": {
+    "@types/aos": "^3.0.7",
     "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "autoprefixer": "^10.4.19",
