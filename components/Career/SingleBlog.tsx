@@ -26,52 +26,63 @@ const SingleBlog = ({ blog }: { blog: Blog }) => {
     <>
       <div className="container mx-auto px-4">
         <div
-          className={`flex flex-col justify-center w-full md:w-3/4 lg:w-1/2 mx-auto h-auto gap-5 rounded-md mb-7 px-6 py-4 ${
+          className={`mx-auto mb-7 flex h-auto w-full flex-col justify-center gap-5 rounded-md px-6 py-4 md:w-3/4 lg:w-1/2 ${
             theme === "dark"
               ? "border border-white text-white"
               : "border border-black text-black"
           }`}
         >
-          <div className="flex flex-row justify-between items-center mb-4">
+          <div className="mb-4 flex flex-row items-center justify-between">
             <div className="flex items-center">
-              <div className="text-sm md:text-base lg:text-lg">{author.icon}</div>
-              <div className={`ml-3 text-sm md:text-lg font-medium`}>{title}</div>
+              <div className="text-sm md:text-base lg:text-lg">
+                {author.icon}
+              </div>
+              <div className={`ml-3 text-sm font-medium md:text-lg`}>
+                {title}
+              </div>
             </div>
-            <div className={`text-gray-600 text-xs md:text-sm lg:text-base`}>
+            <div className={`text-xs text-gray-600 md:text-sm lg:text-base`}>
               {publishDate}
             </div>
           </div>
           <div className="flex flex-col md:flex-row">
-            <p className="flex-1 text-sm md:text-base lg:text-lg">{paragraph}</p>
+            <p className="flex-1 text-sm md:text-base lg:text-lg">
+              {paragraph}
+            </p>
             <button
-              className="ml-auto mt-4 md:mt-0 bg-blue-500 hover:bg-blue-600 text-white text-xs md:text-sm lg:text-base px-4 py-1 rounded-md shadow-md transition-colors duration-300 ease-in-out"
+              className="ml-auto mt-4 rounded-md bg-blue-500 px-4 py-1 text-xs text-white shadow-md transition-colors duration-300 ease-in-out hover:bg-blue-600 md:mt-0 md:text-sm lg:text-base"
               onClick={toggleModal}
             >
               See More
             </button>
           </div>
           <Modal isVisible={isModalVisible} onClose={toggleModal}>
-            <Image src={image} alt="Unable to Load image" width={700} height={500} />
+            <Image
+              src={image}
+              alt="Unable to Load image"
+              width={600}
+              height={400}
+            />
           </Modal>
-          <div className="flex flex-row justify-between items-center mt-4">
+          <div className="mt-4 flex flex-row items-center justify-between">
             <div className="flex">
-              <span className="bg-green-500 text-white text-xs md:text-sm lg:text-base px-2 py-1 rounded-md mr-2">
+              <span className="mr-2 rounded-md bg-green-500 px-2 py-1 text-xs text-white md:text-sm lg:text-base">
                 Full time
               </span>
-              <span className="bg-blue-500 text-white text-xs md:text-sm lg:text-base px-2 py-1 rounded-md">
+              <span className="rounded-md bg-blue-500 px-2 py-1 text-xs text-white md:text-sm lg:text-base">
                 On-Site
               </span>
             </div>
             <button
-              className="ml-auto bg-blue-500 hover:bg-blue-600 text-white text-xs md:text-sm lg:text-base px-4 py-1 rounded-md shadow-md transition-colors duration-300 ease-in-out"
+              className="ml-auto rounded-md bg-blue-500 px-4 py-1 text-xs text-white shadow-md transition-colors duration-300 ease-in-out hover:bg-blue-600 md:text-sm lg:text-base"
               onClick={toggleForm}
             >
               Apply Now
             </button>
           </div>
           {isFormVisible && (
-  <ApplicationForm isVisible={isFormVisible} onClose={toggleForm} />
-)}
+            <ApplicationForm isVisible={isFormVisible} onClose={toggleForm} />
+          )}
         </div>
       </div>
     </>

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import cities, { City } from "./cities"; // Ensure this path is correct
 import { useTheme } from "next-themes";
 import Image from "next/image"; // Import Image component from Next.js
-import { CldUploadWidget } from 'next-cloudinary';
+import { CldUploadWidget } from "next-cloudinary";
 import axios from "axios";
 import toast from "react-hot-toast";
 interface ApplicationFormProps {
@@ -40,13 +40,12 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const [date, setDate] = useState<string>("");
   const [qualification, setQualification] = useState<string>("");
 
-
   const sendForm = async () => {
     if (!validateForm()) return;
 
     try {
       const formattedDate = new Date(date).toISOString();
-      await axios.post('/api/usersapplications', {
+      await axios.post("/api/usersapplications", {
         Name: name,
         FatherName: fatherName,
         CNIC: cnic,
@@ -57,13 +56,13 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
         Qualification: qualification,
         Province: province,
         City: city,
-        Imageurl: picImage
+        Imageurl: picImage,
       });
 
       onClose();
-      toast.success('Application Successfully Submitted');
+      toast.success("Application Successfully Submitted");
     } catch (error) {
-      toast.error('Error Submitting Application');
+      toast.error("Error Submitting Application");
     }
   };
 
@@ -102,11 +101,14 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
     if (!name) newErrors.name = "Please fill in the Name";
     if (!fatherName) newErrors.fatherName = "Please fill in the Father's Name";
-    if (!cnic || cnic.length !== 13) newErrors.cnic = "CNIC must be 13 digits long";
-    if (!mobile || mobile.length < 10 || mobile.length > 11) newErrors.mobile = "Mobile number must be 11 digits long";
+    if (!cnic || cnic.length !== 13)
+      newErrors.cnic = "CNIC must be 13 digits long";
+    if (!mobile || mobile.length < 10 || mobile.length > 11)
+      newErrors.mobile = "Mobile number must be 11 digits long";
     if (!email) newErrors.email = "Please fill in the Email";
     if (!date) newErrors.date = "Please fill in the Date of Birth";
-    if (!qualification) newErrors.qualification = "Please select a Qualification";
+    if (!qualification)
+      newErrors.qualification = "Please select a Qualification";
     if (!gender) newErrors.gender = "Please select a Gender";
     if (!province) newErrors.province = "Please select a Province";
     if (!city) newErrors.city = "Please select a City";
@@ -120,9 +122,9 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
     const imageUrl = result.info.secure_url; // Get the secure URL of the uploaded image
     setImage(imageUrl);
   };
-const filteredCities: City[] = province
+  const filteredCities: City[] = province
     ? cities.filter((c) => c.province === province)
-    : [];
+    : [];
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
       <div className="max-h-full w-full overflow-y-auto rounded-lg bg-white p-8 shadow-lg dark:bg-gray-700 md:max-h-screen md:max-w-screen-md">
@@ -154,9 +156,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               placeholder="Enter your name"
               required
@@ -184,9 +184,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               placeholder="Enter your father's name"
               required
@@ -214,9 +212,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               placeholder="Enter your CNIC number"
               required
@@ -244,9 +240,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               placeholder="Enter your mobile number"
               required
@@ -274,9 +268,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               placeholder="Enter your email address"
               required
@@ -304,9 +296,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               required
             />
@@ -332,9 +322,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               required
             >
@@ -366,9 +354,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               placeholder="Enter your qualification"
               required
@@ -395,9 +381,7 @@ const filteredCities: City[] = province
                   ? "border-white text-white"
                   : "border-gray-300 text-black"
               } block w-full rounded-lg p-3 text-sm ${
-                theme === "dark"
-                  ? "placeholder-white"
-                  : "placeholder-gray-500"
+                theme === "dark" ? "placeholder-white" : "placeholder-gray-500"
               }`}
               required
             >
@@ -457,53 +441,61 @@ const filteredCities: City[] = province
                 </option>
               ))}
             </select>
-          </div>
-<p className="text-red-600">NOTE: Kindly, scan the QR code OR copy the IBAN number to pay the registration fee, please. After successfull transaction, upload the receipt.</p>
+          </div>
+          <div>
+            <p className="text-red-600">
+              NOTE: Kindly, scan the QR code OR copy the IBAN number im order to
+              apply and upload the receipt, For any Info Contact us on
+              0344-5733055.
+            </p>
+          </div>
 
-          <div className="flex justify-center mt-8 items-center ml-8 lg:ml-48 mb-4">
-            
-  <div className="flex flex-col items-center">
-    <p className="text-center">Faisal Bank IBAN</p>
-    <div className="relative mt-2 rounded-lg border border-gray-300">
-      <input
-        type="text"
-        value="PK07FAYS3296787000001619"
-        readOnly
-        className={`border-1 bg-gray-100 dark:bg-gray-800 ${
-          theme === "dark" ? "border-black text-white" : "border-black text-black"
-        } rounded-lg pl-3 text-sm ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
-        style={{
-          color: theme === "dark" ? "white" : "black",
-          height: "40px",
-          width: "280px",
-        }}
-      />
-    </div>
-  </div>
-</div>
+          <div className="mb-4 ml-8 mt-8 flex items-center justify-center lg:ml-48">
+            <div className="flex flex-col items-center">
+              <p className="text-center">Faisal Bank IBAN</p>
+              <div className="relative mt-2 rounded-lg border border-gray-300">
+                <input
+                  type="text"
+                  value="PK07FAYS3296787000001619"
+                  readOnly
+                  className={`border-1 bg-gray-100 dark:bg-gray-800 ${
+                    theme === "dark"
+                      ? "border-black text-white"
+                      : "border-black text-black"
+                  } rounded-lg pl-3 text-sm ${theme === "dark" ? "placeholder-white" : "placeholder-gray-500"}`}
+                  style={{
+                    color: theme === "dark" ? "white" : "black",
+                    height: "40px",
+                    width: "280px",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
 
           <div className="mb-4 flex flex-row items-center justify-center md:flex-row">
-          <div className="w-full p-2 md:w-1/2">
-            <Image
-              src="/images/QRcode/ets.jpg"
-              alt="Payment Instructions"
-              layout="responsive"
-              width={300}
-              height={300}
-              className="h-auto w-full"
-            />
+            <div className="w-full p-2 md:w-1/2">
+              <Image
+                src="/images/QRcode/ets.jpg"
+                alt="Payment Instructions"
+                layout="responsive"
+                width={300}
+                height={300}
+                className="h-auto w-full"
+              />
+            </div>
+            <div className="w-full p-2 md:w-1/2">
+              <Image
+                src="/images/QRcode/ets2.jpg"
+                alt="Another Image"
+                layout="responsive"
+                width={280}
+                height={280}
+                className="h-auto w-full"
+              />
+            </div>
+                    
           </div>
-          <div className="w-full p-2 md:w-1/2">
-            <Image
-              src="/images/QRcode/ets2.jpg"
-              alt="Another Image"
-              layout="responsive"
-              width={280}
-              height={280}
-              className="h-auto w-full"
-            />
-          </div>
-        </div>
           <div className="mb-4 w-full px-4 md:w-1/2">
             <label
               htmlFor="picImage"
@@ -513,17 +505,25 @@ const filteredCities: City[] = province
             >
               Upload Image
             </label>
-            <CldUploadWidget uploadPreset="test_upload" onSuccess={handleUploadSuccess}>
-  {({ open }) => {
-    return (
-      <button   className={`text-white flex justify-center bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center ${
-        theme === "dark" ? "border border-transparent" : "border border-gray-300"
-      }`} onClick={() => open()}>
-        Upload Payment Receipt
-      </button>
-    );
-  }}
-</CldUploadWidget>
+            <CldUploadWidget
+              uploadPreset="test_upload"
+              onSuccess={handleUploadSuccess}
+            >
+              {({ open }) => {
+                return (
+                  <button
+                    className={`flex justify-center rounded-lg bg-green-700 px-5 py-3 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 ${
+                      theme === "dark"
+                        ? "border border-transparent"
+                        : "border border-gray-300"
+                    }`}
+                    onClick={() => open()}
+                  >
+                    Upload Payment Receipt
+                  </button>
+                );
+              }}
+            </CldUploadWidget>
             {errors.picImage && (
               <p className="text-sm text-red-500">{errors.picImage}</p>
             )}
@@ -533,13 +533,13 @@ const filteredCities: City[] = province
           <button
             type="submit"
             onClick={sendForm}
-            className="w-full rounded-lg bg-blue-500 py-2 px-4 font-semibold text-white hover:bg-blue-700"
+            className="w-full rounded-lg bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-700"
           >
             Submit
           </button>
           <button
             onClick={onClose}
-            className="mt-2 w-full rounded-lg bg-gray-500 py-2 px-4 font-semibold text-white hover:bg-gray-700"
+            className="mt-2 w-full rounded-lg bg-gray-500 px-4 py-2 font-semibold text-white hover:bg-gray-700"
           >
             Close
           </button>
