@@ -29,18 +29,18 @@ const blogData: Blog[] = [
     tags: ["computer"],
     publishDate: "",
   },
-  // {
-  //   id: 3,
-  //   title: "Web-Developer Intern.",
-  //   paragraph: "Build Websites and Portals.",
-  //   image: "/images/blog/blog-03.jpg",
-  //   author: {
-  //     name: "Lethium Deo",
-  //     icon: <BriefcaseBusiness />,
-  //     designation: "Graphic Designer",
-  //   },
-  //   tags: ["design"],
-  //   publishDate: "",
-  // },
+  {
+    id: 3,
+    title: "Graphic Designer",
+    paragraph: "ETS is hiring Data Graphic Designer",
+    image: "/images/blog/blog-03.jpg",
+    author: {
+      name: "Lethium Deo",
+      icon: <BriefcaseBusiness />,
+      designation: "Graphic Designer",
+    },
+    tags: ["design"],
+    publishDate: "",
+  },
 ];
 export default blogData;
